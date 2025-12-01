@@ -1,12 +1,12 @@
 import { farcasterMiniApp as miniAppConnector } from "@farcaster/miniapp-wagmi-connector";
 import { http, createConfig } from "wagmi";
-import { base, mainnet } from "wagmi/chains";
+import { arbitrum, mainnet } from "wagmi/chains";
 
 export const config = createConfig({
-  chains: [base, mainnet],
+  chains: [arbitrum, mainnet],
   connectors: [miniAppConnector()],
   transports: {
-    [base.id]: http(),
+    [arbitrum.id]: http(),
     [mainnet.id]: http(),
   },
 });
