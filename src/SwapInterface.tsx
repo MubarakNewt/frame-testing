@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi";
 import { Token, SwapQuote } from "./types";
 import { SUPPORTED_TOKENS } from "./constants";
@@ -24,6 +24,9 @@ export function SwapInterface({ onSwapComplete }: SwapInterfaceProps) {
   const [success, setSuccess] = useState<string>("");
   const [fromOpen, setFromOpen] = useState(false);
   const [toOpen, setToOpen] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState<{ top: number; left: number } | null>(null);
+  const fromBtnRef = useRef<HTMLButtonElement>(null);
+  const toBtnRef = useRef<HTMLButtonElement>(null);
 
   // Initialize with default tokens on component mount
   useEffect(() => {
@@ -126,6 +129,30 @@ export function SwapInterface({ onSwapComplete }: SwapInterfaceProps) {
 
   const availableTokens = SUPPORTED_TOKENS[chainId] || [];
 
+  const handleFromDropdown = () => {
+    if (fromBtnRef.current) {
+      const rect = fromBtnRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + 8,
+        left: Math.max(16, rect.left),
+      });
+    }
+    setFromOpen(!fromOpen);
+    setToOpen(false);
+  };
+
+  const handleToDropdown = () => {
+    if (toBtnRef.current) {
+      const rect = toBtnRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + 8,
+        left: Math.max(16, rect.left),
+      });
+    }
+    setToOpen(!toOpen);
+    setFromOpen(false);
+  };
+
   if (!isConnected) {
     return (
       <div className="swap-interface">
@@ -163,10 +190,8 @@ export function SwapInterface({ onSwapComplete }: SwapInterfaceProps) {
 
             <button
               className="token-selector-btn"
-              onClick={() => {
-                setFromOpen(!fromOpen);
-                setToOpen(false);
-              }}
+              ref={fromBtnRef}
+              onClick={handleFromDropdown}
               type="button"
             >
               {fromToken ? (
@@ -184,8 +209,16 @@ export function SwapInterface({ onSwapComplete }: SwapInterfaceProps) {
             <div className="usd-value">${inputAmount ? (parseFloat(inputAmount) * 1.0).toFixed(2) : "0"}</div>
           )}
 
-          {fromOpen && (
-            <div className="token-dropdown">
+          {fromOpen && dropdownPosition && (
+            <div
+              className="token-dropdown"
+              style={{
+                position: "fixed",
+                top: `${dropdownPosition.top}px`,
+                left: `${dropdownPosition.left}px`,
+                width: "calc(100% - 32px)",
+              }}
+            >
               {availableTokens
                 .filter((t) => !toToken || t.address !== toToken.address)
                 .map((token) => (
@@ -240,10 +273,8 @@ export function SwapInterface({ onSwapComplete }: SwapInterfaceProps) {
 
             <button
               className="token-selector-btn"
-              onClick={() => {
-                setToOpen(!toOpen);
-                setFromOpen(false);
-              }}
+              ref={toBtnRef}
+              onClick={handleToDropdown}
               type="button"
             >
               {toToken ? (
@@ -261,8 +292,16 @@ export function SwapInterface({ onSwapComplete }: SwapInterfaceProps) {
             <div className="usd-value">${quote ? (parseFloat(formatTokenAmount(quote.outputAmount, toToken.decimals)) * 1.0).toFixed(2) : "0"}</div>
           )}
 
-          {toOpen && (
-            <div className="token-dropdown">
+          {toOpen && dropdownPosition && (
+            <div
+              className="token-dropdown"
+              style={{
+                position: "fixed",
+                top: `${dropdownPosition.top}px`,
+                left: `${dropdownPosition.left}px`,
+                width: "calc(100% - 32px)",
+              }}
+            >
               {availableTokens
                 .filter((t) => !fromToken || t.address !== fromToken.address)
                 .map((token) => (

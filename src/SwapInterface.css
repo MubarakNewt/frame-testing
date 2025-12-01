@@ -36,6 +36,7 @@
   padding: 16px;
   border-radius: 16px;
   border: 1px solid #333;
+  position: relative;
 }
 
 .section-top {
@@ -137,19 +138,17 @@
 }
 
 .token-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  margin-top: 8px;
+  position: fixed;
   background: #1a1a1a;
   border: 1px solid #333;
   border-radius: 12px;
   overflow: hidden;
-  z-index: 20;
-  max-height: 280px;
+  z-index: 1000;
+  max-height: 300px;
   overflow-y: auto;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  width: 100%;
+  max-width: 450px;
 }
 
 .token-option {
