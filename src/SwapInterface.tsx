@@ -3,7 +3,6 @@ import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi"
 import { Token, SwapQuote } from "./types";
 import { SUPPORTED_TOKENS } from "./constants";
 import { getSwapQuote, getSwapData, formatTokenAmount } from "./swapUtils";
-import { TokenSelector } from "./TokenSelector";
 import "./SwapInterface.css";
 
 interface SwapInterfaceProps {
@@ -23,6 +22,8 @@ export function SwapInterface({ onSwapComplete }: SwapInterfaceProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
+  const [fromOpen, setFromOpen] = useState(false);
+  const [toOpen, setToOpen] = useState(false);
 
   // Initialize with default tokens on component mount
   useEffect(() => {
@@ -119,14 +120,15 @@ export function SwapInterface({ onSwapComplete }: SwapInterfaceProps) {
     setToToken(fromToken);
     setInputAmount("");
     setQuote(null);
+    setFromOpen(false);
+    setToOpen(false);
   };
+
+  const availableTokens = SUPPORTED_TOKENS[chainId] || [];
 
   if (!isConnected) {
     return (
       <div className="swap-interface">
-        <div className="swap-header">
-          <h2>Swap Tokens</h2>
-        </div>
         <div className="connect-prompt">
           <p>Connect your wallet to start swapping</p>
         </div>
@@ -137,33 +139,75 @@ export function SwapInterface({ onSwapComplete }: SwapInterfaceProps) {
   return (
     <div className="swap-interface">
       <div className="swap-header">
-        <h2>Swap Tokens</h2>
-        <div className="chain-info">Chain: {chainId === 42161 ? "Arbitrum" : "Mainnet"}</div>
+        <h2>Swap</h2>
       </div>
 
       <div className="swap-container">
-        {/* From Token */}
-        <div className="swap-section">
-          <label className="section-label">From</label>
-          <TokenSelector
-            selectedToken={fromToken}
-            onTokenSelect={setFromToken}
-            chainId={chainId}
-            excludeToken={toToken}
-          />
-          <div className="input-group">
-            <input
-              type="number"
-              placeholder="0.0"
-              value={inputAmount}
-              onChange={(e) => setInputAmount(e.target.value)}
-              className="amount-input"
-              disabled={loading}
-            />
-            {fromToken && (
-              <span className="token-label">{fromToken.symbol}</span>
-            )}
+        {/* From Token Section */}
+        <div className="swap-section from-section">
+          <div className="section-top">
+            <label className="section-label">Sell</label>
           </div>
+
+          <div className="swap-input-box">
+            <div className="input-with-amount">
+              <input
+                type="number"
+                placeholder="0"
+                value={inputAmount}
+                onChange={(e) => setInputAmount(e.target.value)}
+                className="amount-input"
+                disabled={loading}
+              />
+            </div>
+
+            <button
+              className="token-selector-btn"
+              onClick={() => {
+                setFromOpen(!fromOpen);
+                setToOpen(false);
+              }}
+              type="button"
+            >
+              {fromToken ? (
+                <>
+                  <span className="token-symbol">{fromToken.symbol}</span>
+                  <span className="dropdown-icon">▼</span>
+                </>
+              ) : (
+                <span>Select token</span>
+              )}
+            </button>
+          </div>
+
+          {fromToken && (
+            <div className="usd-value">${inputAmount ? (parseFloat(inputAmount) * 1.0).toFixed(2) : "0"}</div>
+          )}
+
+          {fromOpen && (
+            <div className="token-dropdown">
+              {availableTokens
+                .filter((t) => !toToken || t.address !== toToken.address)
+                .map((token) => (
+                  <button
+                    key={token.address}
+                    className={`token-option ${
+                      fromToken?.address === token.address ? "selected" : ""
+                    }`}
+                    onClick={() => {
+                      setFromToken(token);
+                      setFromOpen(false);
+                    }}
+                    type="button"
+                  >
+                    <div className="token-info">
+                      <div className="token-name">{token.symbol}</div>
+                      <div className="token-desc">{token.name}</div>
+                    </div>
+                  </button>
+                ))}
+            </div>
+          )}
         </div>
 
         {/* Swap Direction Button */}
@@ -172,50 +216,76 @@ export function SwapInterface({ onSwapComplete }: SwapInterfaceProps) {
           onClick={handleSwapTokens}
           disabled={loading}
           type="button"
+          title="Swap tokens"
         >
           ⇅
         </button>
 
-        {/* To Token */}
-        <div className="swap-section">
-          <label className="section-label">To</label>
-          <TokenSelector
-            selectedToken={toToken}
-            onTokenSelect={setToToken}
-            chainId={chainId}
-            excludeToken={fromToken}
-          />
-          <div className="input-group">
-            <input
-              type="text"
-              placeholder="0.0"
-              value={quote ? formatTokenAmount(quote.outputAmount, toToken?.decimals || 18) : ""}
-              readOnly
-              className="amount-input readonly"
-            />
-            {toToken && (
-              <span className="token-label">{toToken.symbol}</span>
-            )}
+        {/* To Token Section */}
+        <div className="swap-section to-section">
+          <div className="section-top">
+            <label className="section-label">Buy</label>
           </div>
-        </div>
 
-        {/* Quote Details */}
-        {quote && (
-          <div className="quote-details">
-            <div className="detail-row">
-              <span>Rate</span>
-              <span>
-                1 {fromToken?.symbol} = {(parseFloat(quote.outputAmount) / parseFloat(inputAmount)).toFixed(6)} {toToken?.symbol}
-              </span>
+          <div className="swap-input-box">
+            <div className="input-with-amount">
+              <input
+                type="text"
+                placeholder="0"
+                value={quote ? formatTokenAmount(quote.outputAmount, toToken?.decimals || 18) : ""}
+                readOnly
+                className="amount-input readonly"
+              />
             </div>
-            {quote.fees && (
-              <div className="detail-row">
-                <span>Fees</span>
-                <span>{formatTokenAmount(quote.fees, toToken?.decimals || 18)} {toToken?.symbol}</span>
-              </div>
-            )}
+
+            <button
+              className="token-selector-btn"
+              onClick={() => {
+                setToOpen(!toOpen);
+                setFromOpen(false);
+              }}
+              type="button"
+            >
+              {toToken ? (
+                <>
+                  <span className="token-symbol">{toToken.symbol}</span>
+                  <span className="dropdown-icon">▼</span>
+                </>
+              ) : (
+                <span>Select token</span>
+              )}
+            </button>
           </div>
-        )}
+
+          {toToken && (
+            <div className="usd-value">${quote ? (parseFloat(formatTokenAmount(quote.outputAmount, toToken.decimals)) * 1.0).toFixed(2) : "0"}</div>
+          )}
+
+          {toOpen && (
+            <div className="token-dropdown">
+              {availableTokens
+                .filter((t) => !fromToken || t.address !== fromToken.address)
+                .map((token) => (
+                  <button
+                    key={token.address}
+                    className={`token-option ${
+                      toToken?.address === token.address ? "selected" : ""
+                    }`}
+                    onClick={() => {
+                      setToToken(token);
+                      setToOpen(false);
+                    }}
+                    type="button"
+                  >
+                    <div className="token-info">
+                      <div className="token-name">{token.symbol}</div>
+                      <div className="token-desc">{token.name}</div>
+                    </div>
+                  </button>
+                ))}
+            </div>
+          )}
+        </div>
 
         {/* Error Message */}
         {error && <div className="error-message">{error}</div>}
@@ -232,11 +302,6 @@ export function SwapInterface({ onSwapComplete }: SwapInterfaceProps) {
         >
           {loading ? "Processing..." : quote ? "Swap" : "Enter amount"}
         </button>
-
-        {/* Address Info */}
-        <div className="address-info">
-          <small>Connected: {address?.slice(0, 6)}...{address?.slice(-4)}</small>
-        </div>
       </div>
     </div>
   );

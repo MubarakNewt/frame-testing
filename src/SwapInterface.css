@@ -3,7 +3,6 @@
   margin: 0 auto;
   padding: 0;
   background: #111111;
-  border-radius: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -14,15 +13,10 @@
 }
 
 .swap-header h2 {
-  margin: 0 0 4px 0;
-  font-size: 20px;
+  margin: 0;
+  font-size: 28px;
   color: #fff;
   font-weight: 600;
-}
-
-.chain-info {
-  font-size: 12px;
-  color: #999;
 }
 
 .connect-prompt {
@@ -34,39 +28,48 @@
 .swap-container {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .swap-section {
   background: #1a1a1a;
-  padding: 12px;
-  border-radius: 12px;
+  padding: 16px;
+  border-radius: 16px;
   border: 1px solid #333;
 }
 
-.section-label {
-  display: block;
-  font-size: 11px;
-  font-weight: 600;
-  color: #999;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
+.section-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
-.input-group {
+.section-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.swap-input-box {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: flex-start;
+}
+
+.input-with-amount {
+  flex: 1;
 }
 
 .amount-input {
-  flex: 1;
-  padding: 12px;
+  width: 100%;
+  padding: 16px;
   border: none;
-  border-radius: 8px;
-  font-size: 18px;
-  font-weight: 500;
+  border-radius: 12px;
+  font-size: 24px;
+  font-weight: 600;
   outline: none;
   background: transparent;
   color: #fff;
@@ -84,6 +87,7 @@
 .amount-input.readonly {
   background: transparent;
   cursor: not-allowed;
+  color: #fff;
 }
 
 .amount-input:disabled {
@@ -92,27 +96,122 @@
   color: #fff;
 }
 
-.token-label {
-  font-weight: 600;
+.token-selector-btn {
+  padding: 10px 16px;
+  background: rgba(255, 0, 255, 0.2);
+  border: 1px solid rgba(255, 0, 255, 0.3);
+  border-radius: 12px;
   color: #fff;
-  min-width: 60px;
-  text-align: right;
-  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-size: 14px;
+  position: relative;
+  z-index: 10;
+}
+
+.token-selector-btn:hover {
+  background: rgba(255, 0, 255, 0.3);
+  border-color: rgba(255, 0, 255, 0.5);
+}
+
+.token-symbol {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.dropdown-icon {
+  font-size: 10px;
+  color: #999;
+}
+
+.usd-value {
+  font-size: 12px;
+  color: #666;
+  margin-top: 8px;
+  padding-left: 16px;
+}
+
+.token-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 8px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 20;
+  max-height: 280px;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.token-option {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  color: #fff;
+  border-bottom: 1px solid #333;
+  transition: background 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.token-option:last-child {
+  border-bottom: none;
+}
+
+.token-option:hover {
+  background: #222;
+}
+
+.token-option.selected {
+  background: #222;
+}
+
+.token-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.token-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+}
+
+.token-desc {
+  font-size: 12px;
+  color: #999;
 }
 
 .swap-direction-btn {
   align-self: center;
-  width: 36px;
-  height: 36px;
-  border: 2px solid #333;
-  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #333;
+  border-radius: 12px;
   background: #1a1a1a;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 20px;
   transition: all 0.2s;
-  margin: -6px 0;
+  margin: -8px 0;
   padding: 0;
   color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .swap-direction-btn:hover {
@@ -125,28 +224,26 @@
   cursor: not-allowed;
 }
 
-.quote-details {
-  background: #1a1a1a;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #333;
-  font-size: 12px;
+.error-message {
+  background: #3a1f1f;
+  color: #ff6b6b;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #5a3f3f;
+  font-size: 13px;
 }
 
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 4px 0;
-  color: #999;
-}
-
-.detail-row span:last-child {
-  font-weight: 500;
-  color: #fff;
+.success-message {
+  background: #1f3a1f;
+  color: #51cf66;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #3f5a3f;
+  font-size: 13px;
 }
 
 .swap-button {
-  padding: 14px 20px;
+  padding: 16px 20px;
   border: none;
   border-radius: 12px;
   background: linear-gradient(135deg, #ff00ff 0%, #00ffff 100%);
@@ -159,7 +256,7 @@
 }
 
 .swap-button:hover:not(.disabled) {
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 .swap-button:disabled,
@@ -168,30 +265,4 @@
   color: #999;
   cursor: not-allowed;
   opacity: 1;
-}
-
-.error-message {
-  background: #3a1f1f;
-  color: #ff6b6b;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #5a3f3f;
-  font-size: 13px;
-}
-
-.success-message {
-  background: #1f3a1f;
-  color: #51cf66;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #3f5a3f;
-  font-size: 13px;
-}
-
-.address-info {
-  text-align: center;
-  padding-top: 12px;
-  border-top: 1px solid #333;
-  color: #999;
-  font-size: 12px;
 }
