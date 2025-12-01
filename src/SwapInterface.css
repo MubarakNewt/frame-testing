@@ -2,7 +2,7 @@
   max-width: 480px;
   margin: 0 auto;
   padding: 0;
-  background: #fff;
+  background: #111111;
   border-radius: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
@@ -16,19 +16,19 @@
 .swap-header h2 {
   margin: 0 0 4px 0;
   font-size: 20px;
-  color: #000;
+  color: #fff;
   font-weight: 600;
 }
 
 .chain-info {
   font-size: 12px;
-  color: #767676;
+  color: #999;
 }
 
 .connect-prompt {
   text-align: center;
   padding: 40px 20px;
-  color: #767676;
+  color: #999;
 }
 
 .swap-container {
@@ -38,17 +38,17 @@
 }
 
 .swap-section {
-  background: #f3f3f3;
+  background: #1a1a1a;
   padding: 12px;
   border-radius: 12px;
-  border: none;
+  border: 1px solid #333;
 }
 
 .section-label {
   display: block;
   font-size: 11px;
   font-weight: 600;
-  color: #767676;
+  color: #999;
   margin-bottom: 8px;
   text-transform: uppercase;
   letter-spacing: 0.3px;
@@ -69,11 +69,16 @@
   font-weight: 500;
   outline: none;
   background: transparent;
+  color: #fff;
   transition: background 0.2s;
 }
 
+.amount-input::placeholder {
+  color: #666;
+}
+
 .amount-input:focus {
-  background: rgba(0, 0, 0, 0.02);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .amount-input.readonly {
@@ -84,11 +89,12 @@
 .amount-input:disabled {
   background: transparent;
   cursor: not-allowed;
+  color: #fff;
 }
 
 .token-label {
   font-weight: 600;
-  color: #000;
+  color: #fff;
   min-width: 60px;
   text-align: right;
   font-size: 16px;
@@ -98,19 +104,20 @@
   align-self: center;
   width: 36px;
   height: 36px;
-  border: 2px solid #f3f3f3;
+  border: 2px solid #333;
   border-radius: 8px;
-  background: #fff;
+  background: #1a1a1a;
   cursor: pointer;
   font-size: 18px;
   transition: all 0.2s;
   margin: -6px 0;
   padding: 0;
+  color: #fff;
 }
 
 .swap-direction-btn:hover {
-  border-color: #e0e0e0;
-  background: #f9f9f9;
+  border-color: #555;
+  background: #222;
 }
 
 .swap-direction-btn:disabled {
@@ -119,10 +126,10 @@
 }
 
 .quote-details {
-  background: #f3f3f3;
+  background: #1a1a1a;
   padding: 12px;
   border-radius: 12px;
-  border: none;
+  border: 1px solid #333;
   font-size: 12px;
 }
 
@@ -130,19 +137,19 @@
   display: flex;
   justify-content: space-between;
   padding: 4px 0;
-  color: #767676;
+  color: #999;
 }
 
 .detail-row span:last-child {
   font-weight: 500;
-  color: #000;
+  color: #fff;
 }
 
 .swap-button {
   padding: 14px 20px;
   border: none;
   border-radius: 12px;
-  background: #000;
+  background: linear-gradient(135deg, #ff00ff 0%, #00ffff 100%);
   color: white;
   font-size: 16px;
   font-weight: 600;
@@ -157,34 +164,34 @@
 
 .swap-button:disabled,
 .swap-button.disabled {
-  background: #e0e0e0;
-  color: #767676;
+  background: #333;
+  color: #999;
   cursor: not-allowed;
   opacity: 1;
 }
 
 .error-message {
-  background: #ffe0e0;
-  color: #ff2e2e;
+  background: #3a1f1f;
+  color: #ff6b6b;
   padding: 12px;
   border-radius: 8px;
-  border: none;
+  border: 1px solid #5a3f3f;
   font-size: 13px;
 }
 
 .success-message {
-  background: #e0ffe0;
-  color: #22863a;
+  background: #1f3a1f;
+  color: #51cf66;
   padding: 12px;
   border-radius: 8px;
-  border: none;
+  border: 1px solid #3f5a3f;
   font-size: 13px;
 }
 
 .address-info {
   text-align: center;
   padding-top: 12px;
-  border-top: 1px solid #e0e0e0;
-  color: #767676;
+  border-top: 1px solid #333;
+  color: #999;
   font-size: 12px;
 }
